@@ -1,0 +1,17 @@
+{
+    "python.pythonPath": "${workspaceRoot}/bin/python",
+    "python.linting.pep8Enabled": true,
+    //"python.linting.pylintPath": "pylint",
+    "python.linting.pylintArgs": ["--load-plugins", "pylint_django"],
+    "python.unitTest.pyTestEnabled": false,
+    //"python.unitTest.unittestEnabled": true,
+    //"python.unitTest.nosetestsEnabled": false,
+    "python.unitTest.pyTestArgs": [
+        "--exitfirst",
+        "--verbose",
+        "'.*', 'build', 'dist', 'CVS', '_darcs', '{arch}', '*.egg', 'lib'"
+    ],
+    "python.unitTest.promptToConfigure": false,
+    "python.unitTest.unittestEnabled": false,
+    "python.unitTest.nosetestsEnabled": false
+}
