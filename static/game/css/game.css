@@ -1,0 +1,15 @@
+.gameBoard {
+    width: 600px;
+    height: 600px;
+    /*border: 3px solid #73AD21;*/
+}   
+
+.gameInactive {
+    display: none;
+    border: 4px dashed darkblue;
+}
+
+.game {
+    display: block;
+    border: 4px dashed darkblue;
+}
