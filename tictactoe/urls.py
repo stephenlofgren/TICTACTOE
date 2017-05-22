@@ -15,7 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from game.models import Game, Player
+from rest_framework import routers
+from game.views.game_view import GameView, GameViewSet
+from game.views.player_view import PlayerViewSet
+from django.conf.urls import url, include
+
+admin.site.register(Game)
+admin.site.register(Player)
+
+ROUTER = routers.DefaultRouter()
+ROUTER.register(r'players', PlayerViewSet)
+ROUTER.register(r'games', GameViewSet)
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^', include(ROUTER.urls)),
+    url(r'^play_game/$', GameView.Show),
+    url(r'^start_game/$', GameView.start_game),
 ]

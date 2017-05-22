@@ -1,7 +1,7 @@
 {
     "python.pythonPath": "${workspaceRoot}/bin/python",
     "python.linting.pep8Enabled": true,
-    //"python.linting.pylintPath": "pylint",
+    "python.linting.pylintPath": "pylint",
     "python.linting.pylintArgs": ["--load-plugins", "pylint_django"],
     "python.unitTest.pyTestEnabled": false,
     //"python.unitTest.unittestEnabled": true,
