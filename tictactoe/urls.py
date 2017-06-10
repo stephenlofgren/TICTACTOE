@@ -32,5 +32,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include(ROUTER.urls)),
     url(r'^play_game/$', GameView.Show),
+    url(r'^play_game/([0-9]{1,2})$', GameView.Show),
+    url(r'^create_game/$', GameView.create_game),
     url(r'^start_game/$', GameView.start_game),
+    url(r'^post_turn/$', GameView.post_turn),
+    url(r'^game_details/([0-9]{1,2})$', GameView.game_details),
+    url(r'^reset_game/([0-9]{1,2})$', GameView.reset_game),
 ]

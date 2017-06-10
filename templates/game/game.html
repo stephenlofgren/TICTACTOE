@@ -1,0 +1,114 @@
+<HTML>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/game/css/game.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/static/game/js/gameboard.js"></script>
+    <script src="/static/game/js/pieces.js"></script>
+    <script src="/static/game/js/requests.js"></script>
+    <script>
+        var gameBoard, pieces, request;
+        var pk = function () {
+            var gameId = window.location.pathname.replace('/play_game/', '');
+            return gameId;
+        }();
+
+        function pageLoaded() {
+            gameBoard = GameBoard.instance();
+            pieces = Pieces.instance();
+            request = Requests.instance();
+
+            gameBoard.settings.boardContainer = $('.gameBoard')[0];
+            gameBoard.init();
+            
+            pieces.settings = gameBoard.settings;
+            pieces.canvas = gameBoard.canvas;
+
+            request.init();
+            request.state = gameBoard.state;
+
+            gameBoard.events.stateChanged = updateGameArea;
+            gameBoard.events.canvasClicked = canvasClicked;
+
+            gameBoard.canvas.click = function(e) {
+                alert("test");
+            }
+
+            if (pk !== "") {
+                request.pollState(pk);
+                startGame();
+                //updateGameArea();
+            }
+        }
+
+        function resetGame() {
+            request.resetGame();
+        }
+
+
+        function startGame() {
+            $('.gameInit')["0"].style.display = 'none';
+            $('.gameInactive').addClass('game');
+            $('.gameInactive').removeClass = 'gameInactive';
+            gameBoard.start();
+        }
+
+        function canvasClicked(e) {
+            var rowClicked = Math.floor(e.offsetY / ($(".gameBoard")["0"].clientWidth / 3));
+            var colClicked = Math.floor(e.offsetX / ($(".gameBoard")["0"].clientWidth / 3));
+            stateIndex = rowClicked * 3 + colClicked;
+            if (gameBoard.state.game['state_sequence'][stateIndex] != '-') {
+                return;
+            }
+            request.postTurn(rowClicked, colClicked);
+        }
+
+        function updateGameArea() {
+            gameBoard.clear();
+            gameBoard.draw_board();
+            if(gameBoard.state.game ==undefined || gameBoard.state.game['state_sequence'] ==undefined) {
+                return;
+            }
+            $('#activePlayer').text(gameBoard.state.activePlayer["name"]);
+            for (var i = 0, len = gameBoard.state.game['state_sequence'].length; i < len; i++) {
+                pieceChar = gameBoard.state.game['state_sequence'][i];
+                var sectionWidth = $(".gameBoard")["0"].clientWidth / 3;
+                switch (pieceChar) {
+                    case 'X':
+                        gameBoard.drawX(i % 3, Math.floor(i / 3), sectionWidth);
+                        break;
+                    case 'O':
+                        gameBoard.drawCircle(i % 3, Math.floor(i / 3), sectionWidth);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+
+
+
+    </script>
+    </head>
+
+    <body onLoad="pageLoaded()">
+        <H1>Tic-Tc-Toe</H1>
+        <div class="gameInit">
+            <label for="playerOne">Player 1</label>
+            <input type="text" id="playerOne"><br>
+            <label for="playerTwo">Player 2</label>
+            <input type="text" id="playerTwo"><br>
+            <button id="btnStartGame" onclick="startGame()">Start Game</button>
+        </div>
+        <div id="game" class="gameInactive">
+            <input id="game_id" type="hidden" />
+            <button id="btnResetGame" onclick="resetGame()">Reset Game</button>
+            <label id="activePlayerLabel">Active Player: </label>
+            <span id="activePlayer">someactive player</span>
+            <div class="gameBoard"></div>
+        </div>
+    </body>
+
+</HTML>

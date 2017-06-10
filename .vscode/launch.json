@@ -6,6 +6,7 @@
             "type": "python",
             "request": "launch",
             "stopOnEntry": false,
+            "preLaunchTask": "collectstatic",
             "pythonPath": "${config:python.pythonPath}",
             "program": "${workspaceRoot}/manage.py",
             "cwd": "${workspaceRoot}",

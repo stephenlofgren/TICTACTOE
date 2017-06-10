@@ -2,8 +2,17 @@
     // See https://go.microsoft.com/fwlink/?LinkId=733558
     // for the documentation about the tasks.json format
     "version": "0.1.0",
-    "command": "${config:python.pythonPath}",
     "isShellCommand": true,
-    "args": [""],
-    "showOutput": "always"
+    "showOutput": "always",
+    "tasks":[
+        {
+            "taskName": "collectstatic",
+            "command": "${config:python.pythonPath}",
+            "args": [
+                "manage.py",
+                "collectstatic",
+                "--noinput"
+            ]
+        }
+    ]
 }

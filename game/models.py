@@ -50,5 +50,22 @@ class Game(models.Model):
             return self.first_player
         return self.second_player
 
-    def make_move(self, position_index):
-        pass
+    def make_move(self, col, row):
+        self.move_count += 1
+        index = row*3 + col
+        tmplist = list(self.state_sequence)
+        if self.active_player_num == 0:
+            tmplist[index] = 'O'
+        else:
+            tmplist[index] = 'X'
+        self.state_sequence = "".join(tmplist)
+        self.active_player_num = (self.active_player_num + 1) % 2
+        self.save()
+
+    def reset(self):
+        """resets the game to original state"""
+        self.move_count = 0
+        self.state_sequence = '---------'
+        self.active_player_num = 0
+        self.save()
+

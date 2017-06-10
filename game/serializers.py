@@ -8,15 +8,18 @@ from game.models import Game, Player
 class GameSerializer(serializers.HyperlinkedModelSerializer):
     """defines the fields that will be serialized into json"""
     active_player_name = serializers.SerializerMethodField(
-        '__active_player_name')
+        'player_name')
 
-    def __active_player_name(self, game):
+    @staticmethod
+    def player_name(game):
+        """used when serializing"""
         return game.active_player.name
 
     class Meta:
         model = Game
         fields = ('url', 'pk', 'first_player', 'second_player',
-                  'active_player_num', 'active_player_name')
+                  'active_player_num', 'active_player_name',
+                  'state_sequence')
 
 
 # Serializers define the API representation.
