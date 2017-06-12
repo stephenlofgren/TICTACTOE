@@ -6,14 +6,14 @@ var gameSettings, gameState, gameEvents, GameBoard = {
 
     events: {
         stateChanged: {},
-        callStateChanged: function () {
+        callStateChanged: function() {
             if (this.stateChanged != undefined) {
                 this.stateChanged();
             }
         },
 
         canvasClicked: {},
-        callCanvasClicked: function (e) {
+        callCanvasClicked: function(e) {
             if (this.canvasClicked != undefined) {
                 this.canvasClicked(e);
             }
@@ -25,38 +25,41 @@ var gameSettings, gameState, gameEvents, GameBoard = {
     state: {
         activePlayer: {},
         game: {},
-        updateState: function(newActivePlayer, newGame){
+        updateState: function(newActivePlayer, newGame) {
             this.activePlayer = newActivePlayer;
             this.game = newGame;
             gameEvents.callStateChanged();
         }
     },
 
-    init: function() {
+    init: function(boardContainer, canvasClickedEventHandler, stateChangedEventHandler) {
         //this combined with the declaration of s above ensures that all modules have access to settings
         gameSettings = this.settings;
         gameState = this.state;
         gameEvents = this.events;
-    },
 
-    instance: function(){
-        return this;
-    },
+        this.settings.boardContainer = boardContainer;
+        this.events.canvasClicked = canvasClickedEventHandler;
+        this.events.stateChanged = stateChangedEventHandler;
 
-    start: function () {
         this.canvas = document.createElement("canvas");
         this.canvas.width = this.settings.boardContainer.clientWidth;
         this.canvas.height = this.settings.boardContainer.clientHeight;
         this.context = this.canvas.getContext("2d");
         this.settings.boardContainer.append(this.canvas);
-        this.draw_board();
         thisEvents = this.events
-        this.canvas.addEventListener('click', function (e) { 
-            thisEvents.callCanvasClicked(e); 
+        this.canvas.addEventListener('click', function(e) {
+            thisEvents.callCanvasClicked(e);
         }, false);
     },
 
-    draw_board: function () {
+    instance: function() {
+        return this;
+    },
+
+    draw_board: function() {
+        this.canvas.width = this.settings.boardContainer.clientWidth;
+        this.canvas.height = this.settings.boardContainer.clientHeight;
         var sectionWidth = this.settings.boardContainer.clientWidth / 3;
         this.clear();
         s = new component(this.context, this.settings.boardContainer.clientWidth, 10, "black", 0, sectionWidth - 5);
@@ -111,9 +114,9 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         context.stroke();
     },
 
-    clear: function () {
+    clear: function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    },        
+    },
 
     updateGameArea: function() {
         $('#activePlayer').text(activePlayer["name"]);
@@ -139,7 +142,7 @@ var gameSettings, gameState, gameEvents, GameBoard = {
 };
 
 function component(context, width, height, color, x, y) {
-    
+
     this.width = width;
     this.height = height;
     this.x = x;
@@ -149,7 +152,7 @@ function component(context, width, height, color, x, y) {
     this.color = color;
     this.has_changed = false;
 
-    this.update = function () {
+    this.update = function() {
         ctx = context;
         ctx.fillStyle = this.color;
         ctx.fillRect(this.x, this.y, this.width, this.height);

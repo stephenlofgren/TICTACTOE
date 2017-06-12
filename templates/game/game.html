@@ -9,36 +9,37 @@
     <script src="/static/game/js/requests.js"></script>
     <script>
         var gameBoard, pieces, request;
-        var pk = function () {
+        var pk = function() {
             var gameId = window.location.pathname.replace('/play_game/', '');
             return gameId;
         }();
 
+        function startRefresh() {
+            if (gameBoard !== "" &&
+                gameBoard !== undefined &&
+                gameBoard.state.game !== undefined &&
+                gameBoard.state.game['pk'] !== undefined) {
+                request.pollState(gameBoard.state.game['pk']);
+            }
+        }
+
         function pageLoaded() {
+            setInterval(startRefresh, 100);
+
             gameBoard = GameBoard.instance();
             pieces = Pieces.instance();
             request = Requests.instance();
 
-            gameBoard.settings.boardContainer = $('.gameBoard')[0];
-            gameBoard.init();
-            
+            gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea);
+
             pieces.settings = gameBoard.settings;
             pieces.canvas = gameBoard.canvas;
 
             request.init();
             request.state = gameBoard.state;
 
-            gameBoard.events.stateChanged = updateGameArea;
-            gameBoard.events.canvasClicked = canvasClicked;
-
-            gameBoard.canvas.click = function(e) {
-                alert("test");
-            }
-
             if (pk !== "") {
                 request.pollState(pk);
-                startGame();
-                //updateGameArea();
             }
         }
 
@@ -48,10 +49,9 @@
 
 
         function startGame() {
-            $('.gameInit')["0"].style.display = 'none';
-            $('.gameInactive').addClass('game');
-            $('.gameInactive').removeClass = 'gameInactive';
-            gameBoard.start();
+            var player1 = $('#playerOne').val();
+            var player2 = $('#playerTwo').val()
+            request.createGame(player1, player2);
         }
 
         function canvasClicked(e) {
@@ -65,12 +65,16 @@
         }
 
         function updateGameArea() {
+            $('.gameInit')["0"].style.display = 'none';
+            $('.gameInactive').addClass('game');
+            $('.gameInactive').removeClass = 'gameInactive';
             gameBoard.clear();
             gameBoard.draw_board();
-            if(gameBoard.state.game ==undefined || gameBoard.state.game['state_sequence'] ==undefined) {
+            if (gameBoard.state.game == undefined || gameBoard.state.game['state_sequence'] == undefined) {
                 return;
             }
             $('#activePlayer').text(gameBoard.state.activePlayer["name"]);
+            $('#currentGameId').text(gameBoard.state.game["pk"]);
             for (var i = 0, len = gameBoard.state.game['state_sequence'].length; i < len; i++) {
                 pieceChar = gameBoard.state.game['state_sequence'][i];
                 var sectionWidth = $(".gameBoard")["0"].clientWidth / 3;
@@ -86,29 +90,38 @@
                 }
             }
         }
-
-
-
-
     </script>
-    </head>
+</head>
 
-    <body onLoad="pageLoaded()">
-        <H1>Tic-Tc-Toe</H1>
-        <div class="gameInit">
-            <label for="playerOne">Player 1</label>
-            <input type="text" id="playerOne"><br>
-            <label for="playerTwo">Player 2</label>
-            <input type="text" id="playerTwo"><br>
-            <button id="btnStartGame" onclick="startGame()">Start Game</button>
-        </div>
-        <div id="game" class="gameInactive">
-            <input id="game_id" type="hidden" />
-            <button id="btnResetGame" onclick="resetGame()">Reset Game</button>
-            <label id="activePlayerLabel">Active Player: </label>
-            <span id="activePlayer">someactive player</span>
-            <div class="gameBoard"></div>
-        </div>
-    </body>
+<body onLoad="pageLoaded()">
+    <H1>Tic-Tc-Toe</H1>
+    <div class="gameInit">
+        <label for="playerOne">Player 1</label>
+        <input type="text" id="playerOne"><br>
+        <label for="playerTwo">Player 2</label>
+        <input type="text" id="playerTwo"><br>
+        <button id="btnStartGame" onclick="startGame()">Start Game</button>
+    </div>
+    <div id="game" class="gameInactive">
+        <table>
+            <tr>
+                <td>
+                    <span id="currentGameLabel">Current Game: </span>
+                    <span id="currentGameId">##</span>
+                </td>
+                <td>
+                    <button id="btnResetGame" onclick="resetGame()">Reset Game</button>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label id="activePlayerLabel">Active Player: </label>
+                    <span id="activePlayer">someactive player</span>
+                </td>
+            </tr>
+        </table>
+        <div class="gameBoard"></div>
+    </div>
+</body>
 
 </HTML>
