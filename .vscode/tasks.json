@@ -4,15 +4,13 @@
     "version": "0.1.0",
     "isShellCommand": true,
     "showOutput": "always",
-    "tasks":[
-        {
-            "taskName": "collectstatic",
-            "command": "${config:python.pythonPath}",
-            "args": [
-                "manage.py",
-                "collectstatic",
-                "--noinput"
-            ]
-        }
-    ]
+    "tasks": [{
+        "taskName": "collectstatic",
+        "command": "${config:python.pythonPath}",
+        "args": [
+            "manage.py",
+            "collectstatic",
+            "--noinput"
+        ]
+    }]
 }
