@@ -1,19 +1,28 @@
-
 var requestState, Requests = {
     state: {},
 
     resetGame: function() {
         thisState = this.state;
-        this.putRequest('/reset_game/' + game["pk"], function (response) {
+        this.putRequest('/reset_game/' + game["pk"], function(response) {
             game = JSON.parse(response["currentGame"]);
             activePlayer = JSON.parse(response["activePlayer"]);
             thisState.updateState(activePlayer, game);
         });
     },
 
-    pollState: function(pk){
+    pollState: function(pk) {
         thisState = this.state;
-        this.getRequest('/game_details/' + pk, function (response) {
+        this.getRequest('/game_details/' + pk, function(response) {
+            game = JSON.parse(response["currentGame"]);
+            activePlayer = JSON.parse(response["activePlayer"]);
+            thisState.updateState(activePlayer, game);
+        });
+    },
+
+    createGame: function(player1, player2) {
+        thisState = this.state;
+        var data = { "first_player": player1, "second_player": player2 }
+        this.postRequest('/create_game/', data, function(response) {
             game = JSON.parse(response["currentGame"]);
             activePlayer = JSON.parse(response["activePlayer"]);
             thisState.updateState(activePlayer, game);
@@ -23,7 +32,7 @@ var requestState, Requests = {
     postTurn: function(rowClicked, colClicked) {
         thisState = this.state;
         var data = { "game_id": game["pk"], "active_player_num": game["active_player_num"], "row_clicked": rowClicked, "col_clicked": colClicked }
-        this.postRequest('/post_turn/', data, function (response) {
+        this.postRequest('/post_turn/', data, function(response) {
             game = JSON.parse(response["currentGame"]);
             activePlayer = JSON.parse(response["activePlayer"]);
             thisState.updateState(activePlayer, game);
@@ -36,12 +45,12 @@ var requestState, Requests = {
             url: serviceUrl,
             type: 'PUT',
             headers: { "X-CSRFToken": csrftoken },
-            success: function (result) {
+            success: function(result) {
                 if (callback != null) {
                     callback(result);
                 }
             },
-            error: function (result) {
+            error: function(result) {
                 console.log('error');
             }
         });
@@ -54,12 +63,12 @@ var requestState, Requests = {
             type: 'POST',
             headers: { "X-CSRFToken": csrftoken },
             data: data,
-            success: function (result) {
+            success: function(result) {
                 if (callback != null) {
                     callback(result);
                 }
             },
-            error: function (result) {
+            error: function(result) {
                 console.log('error');
             }
         });
@@ -71,12 +80,12 @@ var requestState, Requests = {
             url: serviceUrl,
             headers: { "X-CSRFToken": csrftoken },
             type: 'GET',
-            success: function (result) {
+            success: function(result) {
                 if (callback != null) {
                     callback(result);
                 }
             },
-            error: function (result) {
+            error: function(result) {
                 console.log('error');
                 console.log(result);
             }
