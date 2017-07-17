@@ -71,7 +71,9 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         s = new component(this.context, 10, this.settings.boardContainer.clientWidth, "black", 2 * sectionWidth - 5, 0);
         s.update();
     },
+
     drawX: function(col, row, sectionWidth) {
+        this.drawUnicorn(col, row, sectionWidth);
         startX = col * sectionWidth + 10;
         startY = row * sectionWidth + 10;
         endX = (col + 1) * sectionWidth - 10;
@@ -96,6 +98,29 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         context.lineWidth = lineWidth;
         context.strokeStyle = '#003300';
         context.stroke();
+    },
+
+    drawUnicorn: function(col, row, sectionWidth) {
+        startX = col * sectionWidth + 10;
+        startY = row * sectionWidth + 10;
+        endX = (col + 1) * sectionWidth - 10;
+        endY = (row + 1) * sectionWidth - 10;
+        var canvas = $("canvas")["0"];
+        var context = canvas.getContext('2d');
+        img = document.createElement("img");
+        img.setAttribute("src", "/static/game/images/unicorn.jpg");
+        ctx.drawImage(img, startX, startY, sectionWidth - 20, sectionWidth - 20);
+    },
+    drawRainbow: function(col, row, sectionWidth) {
+        startX = col * sectionWidth + 10;
+        startY = row * sectionWidth + 10;
+        endX = (col + 1) * sectionWidth - 10;
+        endY = (row + 1) * sectionWidth - 10;
+        var canvas = $("canvas")["0"];
+        var context = canvas.getContext('2d');
+        img = document.createElement("img");
+        img.setAttribute("src", "/static/game/images/rainbow.jpg");
+        ctx.drawImage(img, startX, startY, sectionWidth - 20, sectionWidth - 20);
     },
     drawCircle: function(col, row, sectionWidth) {
         centerX = col * sectionWidth + sectionWidth / 2;

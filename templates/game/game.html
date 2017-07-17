@@ -80,10 +80,10 @@
                 var sectionWidth = $(".gameBoard")["0"].clientWidth / 3;
                 switch (pieceChar) {
                     case 'X':
-                        gameBoard.drawX(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawUnicorn(i % 3, Math.floor(i / 3), sectionWidth);
                         break;
                     case 'O':
-                        gameBoard.drawCircle(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawRainbow(i % 3, Math.floor(i / 3), sectionWidth);
                         break;
                     default:
                         break;
