@@ -5,7 +5,6 @@
     <link rel="stylesheet" type="text/css" href="/static/game/css/game.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/static/game/js/gameboard.js"></script>
-    <script src="/static/game/js/pieces.js"></script>
     <script src="/static/game/js/requests.js"></script>
     <script>
         var gameBoard, pieces, request;
@@ -27,13 +26,9 @@
             setInterval(startRefresh, 100);
 
             gameBoard = GameBoard.instance();
-            pieces = Pieces.instance();
             request = Requests.instance();
 
-            gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea, gameOver);
-
-            pieces.settings = gameBoard.settings;
-            pieces.canvas = gameBoard.canvas;
+            gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea);
 
             request.init();
             request.state = gameBoard.state;
@@ -43,10 +38,6 @@
             }
         }
 
-        function gameOver(winner) {
-
-        }
-        
         function resetGame() {
             request.resetGame();
         }
@@ -73,7 +64,7 @@
             $('.gameInactive').addClass('game');
             $('.gameInactive').removeClass = 'gameInactive';
             gameBoard.clear();
-            gameBoard.draw_board();
+            gameBoard.draw_board(); 
             if (gameBoard.state.game == undefined || gameBoard.state.game['state_sequence'] == undefined) {
                 return;
             }
@@ -84,10 +75,10 @@
                 var sectionWidth = $(".gameBoard")["0"].clientWidth / 3;
                 switch (pieceChar) {
                     case 'X':
-                        gameBoard.drawUnicorn(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawImage(i % 3, Math.floor(i / 3), sectionWidth, 'unicorn.jpg');
                         break;
                     case 'O':
-                        gameBoard.drawRainbow(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawImage(i % 3, Math.floor(i / 3), sectionWidth, 'rainbow.jpg');
                         break;
                     default:
                         break;
@@ -95,10 +86,23 @@
             }
         }
     </script>
+     <script>
+        var scorex=0
+        var scorey=0
+
+        if (winner=x){
+            scorex = scorex + 1
+
+        }
+
+        if (winner=o){
+            scorey = scorey + 1
+        }
+    </script>
 </head>
 
 <body onLoad="pageLoaded()">
-    <H1>Tic-Tc-Toe</H1>
+    <H1>Tic-TAc-Toe</H1>
     <div class="gameInit">
         <label for="playerOne">Player 1</label>
         <input type="text" id="playerOne"><br>
