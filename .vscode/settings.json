@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "${workspaceRoot}/venv/bin/python",
+    "python.pythonPath": "c:/Users/user/code/TICTACTOE/venv/scripts/python.exe",
     "python.linting.pep8Enabled": true,
     "python.linting.pylintPath": "pylint",
     "python.linting.pylintArgs": ["--load-plugins", "pylint_django"],

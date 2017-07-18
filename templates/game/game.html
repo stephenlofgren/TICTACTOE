@@ -30,7 +30,7 @@
             pieces = Pieces.instance();
             request = Requests.instance();
 
-            gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea);
+            gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea, gameOver);
 
             pieces.settings = gameBoard.settings;
             pieces.canvas = gameBoard.canvas;
@@ -43,6 +43,10 @@
             }
         }
 
+        function gameOver(winner) {
+
+        }
+        
         function resetGame() {
             request.resetGame();
         }

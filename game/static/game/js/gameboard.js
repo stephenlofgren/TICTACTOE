@@ -17,6 +17,11 @@ var gameSettings, gameState, gameEvents, GameBoard = {
             if (this.canvasClicked != undefined) {
                 this.canvasClicked(e);
             }
+        },
+
+        gameOver: {},
+        callGameOver: function(winner){
+            this.gameOver(winner);
         }
     },
 
@@ -32,7 +37,7 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         }
     },
 
-    init: function(boardContainer, canvasClickedEventHandler, stateChangedEventHandler) {
+    init: function(boardContainer, canvasClickedEventHandler, stateChangedEventHandler, gameOverEventHandler) {
         //this combined with the declaration of s above ensures that all modules have access to settings
         gameSettings = this.settings;
         gameState = this.state;
@@ -41,6 +46,7 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         this.settings.boardContainer = boardContainer;
         this.events.canvasClicked = canvasClickedEventHandler;
         this.events.stateChanged = stateChangedEventHandler;
+        this.events.gameOver = gameOverEventHandler;
 
         this.canvas = document.createElement("canvas");
         this.canvas.width = this.settings.boardContainer.clientWidth;
