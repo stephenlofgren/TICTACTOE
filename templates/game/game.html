@@ -5,10 +5,11 @@
     <link rel="stylesheet" type="text/css" href="/static/game/css/game.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="/static/game/js/gameboard.js"></script>
-    <script src="/static/game/js/pieces.js"></script>
     <script src="/static/game/js/requests.js"></script>
     <script>
         var gameBoard, pieces, request;
+        var oScore = 0;
+        var xScore = 0;
         var pk = function() {
             var gameId = window.location.pathname.replace('/play_game/', '');
             return gameId;
@@ -24,16 +25,12 @@
         }
 
         function pageLoaded() {
-            setInterval(startRefresh, 100);
+            setInterval(startRefresh, 200);
 
             gameBoard = GameBoard.instance();
-            pieces = Pieces.instance();
             request = Requests.instance();
 
             gameBoard.init($('.gameBoard')[0], canvasClicked, updateGameArea, gameOver);
-
-            pieces.settings = gameBoard.settings;
-            pieces.canvas = gameBoard.canvas;
 
             request.init();
             request.state = gameBoard.state;
@@ -43,19 +40,32 @@
             }
         }
 
-        function gameOver(winner) {
-
-        }
-        
         function resetGame() {
             request.resetGame();
         }
 
+        function gameOver(winner){
+
+            if (winner='X'){
+                xScore = xScore + 1;
+            }
+            if (winner='O'){
+                oScore = oScore + 1;
+            } 
+            
+
+            resetGame();
+            if (!confirm('Would you like to play again?')) {
+                window.location.href = '/play_game/';
+            } 	             
+        }
 
         function startGame() {
             var player1 = $('#playerOne').val();
             var player2 = $('#playerTwo').val()
             request.createGame(player1, player2);
+            $('#oPlayer').text(player1);
+            $('#xPlayer').text(player2);
         }
 
         function canvasClicked(e) {
@@ -84,27 +94,88 @@
                 var sectionWidth = $(".gameBoard")["0"].clientWidth / 3;
                 switch (pieceChar) {
                     case 'X':
-                        gameBoard.drawUnicorn(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawImage(i % 3, Math.floor(i / 3), sectionWidth, "squirrel.png");
                         break;
                     case 'O':
-                        gameBoard.drawRainbow(i % 3, Math.floor(i / 3), sectionWidth);
+                        gameBoard.drawImage(i % 3, Math.floor(i / 3), sectionWidth, 'duck.png');
                         break;
                     default:
                         break;
                 }
             }
+            calculateWinner(gameBoard.state.game['state_sequence'])
+            $('#oScore').text(oScore);
+            $('#xScore').text(xScore);
+}
+    </script>
+<script>
+        function calculateWinner(stateString){
+            if(checkCombo("X", 0,3,6, stateString)
+             || checkCombo("X", 0,4,8, stateString)
+             || checkCombo("X", 0,1,2, stateString)
+             || checkCombo("X", 2,5,8, stateString)
+             || checkCombo("X", 2,4,6, stateString)
+             || checkCombo("X", 3,4,5, stateString)
+             || checkCombo("X", 1,4,7, stateString)
+             || checkCombo("X", 6,7,8, stateString)
+             ){
+                gameBoard.events.callGameOver('X');
+            }
+            if(checkCombo("O", 0,3,6, stateString)
+             || checkCombo("O", 0,4,8, stateString)
+             || checkCombo("O", 0,1,2, stateString)
+             || checkCombo("O", 2,5,8, stateString)
+             || checkCombo("O", 2,4,6, stateString)
+             || checkCombo("O", 3,4,5, stateString)
+             || checkCombo("O", 1,4,7, stateString)
+             || checkCombo("O", 6,7,8, stateString)
+             ){
+                gameBoard.events.callGameOver('O')
+            }
+
+            if(stateString[0] != '-' 
+            && stateString[1] != '-'
+            && stateString[2] != '-' 
+            && stateString[3] != '-'
+            && stateString[4] != '-'
+            && stateString[5] != '-'
+            && stateString[6] != '-'
+            && stateString[7] != '-'
+            && stateString[8] != '-'
+            ){
+                gameBoard.events.callGameOver('-')
+            }
+        }
+        function checkCombo(character, pos0, pos1, pos2, stateString){
+            return (stateString[pos0] == character && stateString[pos1] == character && stateString[pos2] == character)
         }
     </script>
 </head>
 
 <body onLoad="pageLoaded()">
-    <H1>Tic-Tc-Toe</H1>
+    <H1>Tic-Tac-Toe</H1>
     <div class="gameInit">
         <label for="playerOne">Player 1</label>
         <input type="text" id="playerOne"><br>
         <label for="playerTwo">Player 2</label>
         <input type="text" id="playerTwo"><br>
         <button id="btnStartGame" onclick="startGame()">Start Game</button>
+    </div>
+    <div>
+        <table> 
+            <tr>
+                <th>Player</th>
+                <th>Score</th>
+            </tr>
+            <tr>
+                <td id="oPlayer">Player1</td>
+                <td id="oScore">00</td>
+            </tr>
+            <tr>
+                <td id="xPlayer">Player2</td>
+                <td id="xScore">00</td>
+            </tr>
+        </table>
     </div>
     <div id="game" class="gameInactive">
         <table>

@@ -106,26 +106,13 @@ var gameSettings, gameState, gameEvents, GameBoard = {
         context.stroke();
     },
 
-    drawUnicorn: function(col, row, sectionWidth) {
+    drawImage: function(col, row, sectionWidth, imgName) {
         startX = col * sectionWidth + 10;
         startY = row * sectionWidth + 10;
-        endX = (col + 1) * sectionWidth - 10;
-        endY = (row + 1) * sectionWidth - 10;
         var canvas = $("canvas")["0"];
         var context = canvas.getContext('2d');
         img = document.createElement("img");
-        img.setAttribute("src", "/static/game/images/unicorn.jpg");
-        ctx.drawImage(img, startX, startY, sectionWidth - 20, sectionWidth - 20);
-    },
-    drawRainbow: function(col, row, sectionWidth) {
-        startX = col * sectionWidth + 10;
-        startY = row * sectionWidth + 10;
-        endX = (col + 1) * sectionWidth - 10;
-        endY = (row + 1) * sectionWidth - 10;
-        var canvas = $("canvas")["0"];
-        var context = canvas.getContext('2d');
-        img = document.createElement("img");
-        img.setAttribute("src", "/static/game/images/rainbow.jpg");
+        img.setAttribute("src", "/static/game/images/" + imgName);
         ctx.drawImage(img, startX, startY, sectionWidth - 20, sectionWidth - 20);
     },
     drawCircle: function(col, row, sectionWidth) {

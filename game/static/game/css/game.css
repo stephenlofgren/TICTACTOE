@@ -6,10 +6,10 @@
 
 .gameInactive {
     display: none;
-    border: 4px dashed darkblue;
+    border: 8px dotted #27dbcc;
 }
 
 .game {
     display: block;
-    border: 4px dashed darkblue;
+    border: 8px dotted #27dbcc;
 }

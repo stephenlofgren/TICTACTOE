@@ -12,11 +12,25 @@ var requestState, Requests = {
 
     pollState: function(pk) {
         thisState = this.state;
-        this.getRequest('/game_details/' + pk, function(response) {
-            game = JSON.parse(response["currentGame"]);
-            activePlayer = JSON.parse(response["activePlayer"]);
-            thisState.updateState(activePlayer, game);
-        });
+        try{
+            this.getRequest('/game_details/' + pk, function(response) {
+                try{
+                game = JSON.parse(response["currentGame"]);
+                activePlayer = JSON.parse(response["activePlayer"]);
+                thisState.updateState(activePlayer, game);
+                }catch(err){
+                    console.log(err);
+                    console.log(response);
+                }
+            }, 
+            function(response){
+                //error handler
+            });
+        }
+        catch(err){
+            console.log("pollstate error");
+            console.log(err);
+        }
     },
 
     createGame: function(player1, player2) {
@@ -74,20 +88,25 @@ var requestState, Requests = {
         });
     },
 
-    getRequest: function(serviceUrl, callback = null) {
+    getRequest: function(serviceUrl, callback = null, err = null) {
         var csrftoken = this.getCookie('csrftoken');
         $.ajax({
             url: serviceUrl,
             headers: { "X-CSRFToken": csrftoken },
             type: 'GET',
             success: function(result) {
+                //sometimes we are getting empty string back
+                if(result == "" && err != null){
+                    err(result);
+                }
                 if (callback != null) {
                     callback(result);
                 }
             },
             error: function(result) {
-                console.log('error');
-                console.log(result);
+                if (err != null) {
+                    err(result);
+                }
             }
         });
     },

@@ -97,6 +97,7 @@ class GameView(APIView):
         query_set = Game.objects.all()
         game = query_set.filter(pk=pk)[0]
         context_dict = GameView.get_game_context(game, request)
+        print(context_dict)
         return Response(data=context_dict)
 
 
